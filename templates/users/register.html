@@ -15,13 +15,29 @@ login and signup
         {% csrf_token %}
         <h2 class="text-6xl text-center my-10 pt-4">Register</h2>
         <div class="flex flex-col gap-3 px-14 py-10">
-            {{ form }}
+            {{ form.username }}
+            {{ form.email }}
+
+            <div class="relative">
+                {{ form.password1 }}
+                <span id="togglePassword" class="absolute top-3 right-6 cursor-pointer">
+                    <i class="fa-solid fa-eye"></i>
+                </span>
+            </div>
+            <div class="relative">
+                {{ form.password2 }}
+                <span id="togglePassword" class="absolute top-3 right-6 cursor-pointer">
+                    <i class="fa-solid fa-eye"></i>
+                </span>
+            </div>
         </div>
 
         <div class="flex justify-center pb-10">
-            <button class="btn font-bold px-4 rounded">Register</button>
+            <button class="btn font-bold px-4 rounded-md">Register</button>
         </div>
     </form>
 </section>
+
+<script src="{% static 'js/showPassword.js' %}"></script>
 
 {% endblock %}
