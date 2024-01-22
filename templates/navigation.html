@@ -1,41 +1,60 @@
 {% load static %}
+<style>
+    .underline-on-hover {
+        position: relative;
+        display: inline-block;
+    }
+
+    .underline-on-hover:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: darkcyan;
+        transition: width 0.5s ease;
+    }
+
+    .underline-on-hover:hover:before {
+        width: 100%;
+    }
+</style>
 
 <div class="bg-slate-800">
-    <nav class="flex flex-wrap justify-between items-center mx-16 text-2xl">
+    <nav class="flex flex-wrap justify-between items-center mx-8 text-2xl">
         <ul>
             <a href="/"><img class="w-52 h-auto" src="{% static 'images/nav-logo.png' %}" alt=""></a>
         </ul>
 
-        <ul class="flex gap-3">
-            <li class="bg-blue-500 hover:bg-blue-700 transition duration-300">
-                <a href="/" class="block w-30 text-center p-6">Home</a>
+        <ul class="flex gap-5">
+            <li class="underline-on-hover">
+                <a href="/" class="block text-center p-4 text-gray-100">test</a>
             </li>
-            <li class="bg-blue-500 hover:bg-blue-700 transition duration-300">
-                <a href="/" class="block w-30 text-center p-6">Home</a>
+            <li class="underline-on-hover">
+                <a href="/" class="block text-center p-4 text-gray-100">test</a>
             </li>
-            <li class="bg-blue-500 hover:bg-blue-700 transition duration-300">
-                <a href="/" class="block w-30 text-center p-6">Home</a>
-            </li>
-            <li class="bg-blue-500 hover:bg-blue-700 transition duration-300">
-                <a href="/" class="block w-30 text-center p-6">Home</a>
+            <li class="underline-on-hover">
+                <a href="/" class="block text-center p-4 text-gray-100">test</a>
             </li>
         </ul>
+
         <ul class="flex gap-3">
             {% if user.is_authenticated %}
-            <li class="bg-blue-500 hover:bg-blue-700 transition duration-300">
-                <a href="{% url 'logout' %}" class="p-6 block w-30 text-center">
-                    Logout
+            <li class="underline-on-hover">
+                <a href="{% url 'logout' %}" class="block text-center p-4 text-gray-100">
+                    logout
                 </a>
             </li>
 
             {% else %}
-            <li class="bg-blue-500 hover:bg-blue-700 transition duration-300">
-                <a href="{% url 'register' %}" class="p-6 block w-30 text-center ">
+            <li class="underline-on-hover">
+                <a href="{% url 'register' %}" class="block text-center p-4 text-gray-100">
                     register
                 </a>
             </li>
-            <li class="bg-blue-500 hover:bg-blue-900 transition duration-300">
-                <a href="{% url 'login' %}" class="p-6 block w-30 text-center ">
+            <li class="underline-on-hover">
+                <a href="{% url 'login' %}" class="block text-center p-4 text-gray-100">
                     login
                 </a>
             </li>

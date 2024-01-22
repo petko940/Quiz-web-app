@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const quizOptions = document.getElementsByClassName('option');
     let optionSelected = false;
     let ifWrong = false;
-
+    
     Array.from(quizOptions).forEach((option) => {
         option.addEventListener('click', async () => {
             if (optionSelected) {
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const response = await fetch(`/api/${quizQuestionId}`, {});
                 const data = await response.json();
-
+            
                 option.style.backgroundColor = 'orange';
                 
                 Array.from(quizOptions).forEach((option) => {
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
 
                 optionSelected = true;
-                console.log(data['correct_option']);
+
                 setTimeout(() => {
                     if (data['correct_option'] === option.textContent.trim().substring(0, 1)) {
                         option.style.backgroundColor = 'green';
@@ -32,8 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     const p = document.createElement('p');
-                    p.textContent = 'Register for more quizzes!';
-                    p.setAttribute('class', 'text-3xl text-slate-200 text-center mt-10');
+                    p.textContent = 'Register for more questions!';
+                    p.setAttribute('class', 'text-3xl text-center mt-10');
+                    p.setAttribute('style', 'color: white;');
                     document.body.appendChild(p);
 
                     Array.from(quizOptions).forEach((option) => {
