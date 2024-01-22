@@ -78,7 +78,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                # TODO: Check if works
+                # google login
                 'social_django.context_processors.backends',  # Add this line
                 'social_django.context_processors.login_redirect',  # Add this line
             ],
@@ -149,14 +149,18 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 AUTHENTICATION_BACKENDS = [
     'apps.users.backends.CustomAuthenticationBackend',
-    # TODO: Check if works
-    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth2',  # google login
+    'social_core.backends.facebook.FacebookOAuth2',  # facebook login
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# TODO: Check if works
+# google login
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv(
+    'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+
+SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('SOCIAL_AUTH_FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('SOCIAL_AUTH_FACEBOOK_SECRET')
 
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
