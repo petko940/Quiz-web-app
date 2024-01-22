@@ -1,10 +1,11 @@
 from django.urls import path
 
-from apps.quiz.api.views import SingleQuestionAPIView
+from apps.quiz.api.views import (SingleQuestionAPIView,
+                                 PythonTenQuestionsAPIView,
+                                 GetRightAnswerAPIView, )
 
 from apps.quiz.views import (QuizView,
-                             PythonQuiz
-                             )
+                             PythonQuiz, )
 
 urlpatterns = [
     path('single-question/', QuizView.as_view(), name='single-question'),
@@ -12,4 +13,6 @@ urlpatterns = [
 
     # api
     path('api/<int:pk>/', SingleQuestionAPIView.as_view(), name='api-single-question'),
+    path('api/python-questions/', PythonTenQuestionsAPIView.as_view(), name='api-python-questions'),
+    path('api/python-questions/<int:pk>/', GetRightAnswerAPIView.as_view(), name='api-get-right-answer'),
 ]
