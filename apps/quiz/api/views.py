@@ -1,10 +1,12 @@
 import random
 
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from apps.quiz.models import PythonQuestions
-from apps.quiz.api.serializers import SingleQuestionSerializer, PythonQuestionsSerializer, GetRightAnswerSerializer
+from apps.quiz.models import PythonQuestions, PythonQuizResult
+from apps.quiz.api.serializers import SingleQuestionSerializer, PythonQuestionsSerializer, GetRightAnswerSerializer, \
+    PythonQuizResultSerializer
 
 
 class SingleQuestionAPIView(APIView):
@@ -38,9 +40,47 @@ class GetRightAnswerAPIView(APIView):
         return Response()
 
 
-class PythonTenQuestionsAPIView(APIView):
+# class ChooseTypeQuizAPIView(APIView):
+#     result = None
+#
+#     def post(self, request, *args, **kwargs):
+#         data = request.data
+#         self.result = data.get('result')
+#         print(self.result)
+#         return Response({'result': self.result.get('res')})
+
+
+class PythonQuestionsAPIView(APIView):
     def get(self, request, *args, **kwargs):
         # count of questions
-        questions = random.sample(list(PythonQuestions.objects.all()), 10)
+        # count = request.GET.get('count', 10)
+        count = 1
+        questions = random.sample(list(PythonQuestions.objects.all()), count)
         serializer = PythonQuestionsSerializer(questions, many=True)
         return Response(serializer.data)
+
+
+class SaveQuizResultAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            user = request.user
+            correct_answers = int(request.data.get('correct_answers', 0))
+            finish_time = int(request.data.get('finish_time', 0))
+
+            # TODO: rename dbs
+            result = PythonQuizResult.objects.create(
+                user=user,
+                correct_answers=correct_answers,
+                finish_time=finish_time,
+                quiz_name="Python",
+            )
+
+            serializer = PythonQuizResultSerializer(result)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetUsernameAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response({'username': request.user.username})

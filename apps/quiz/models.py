@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.users.models import CustomUser
+
 
 # Create your models here.
 class PythonQuestions(models.Model):
@@ -17,3 +19,11 @@ class PythonQuestions(models.Model):
 
     objects = models.Manager()
 
+
+class PythonQuizResult(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    quiz_name = models.CharField(max_length=50)
+    correct_answers = models.IntegerField(default=0)
+    finish_time = models.IntegerField()
+
+    objects = models.Manager()

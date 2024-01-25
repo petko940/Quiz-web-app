@@ -1,73 +1,136 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    let currentQuestionIndex = 0; // Track the index of the current question
-    let quizQuestions = []; // Array to store questions fetched from the API
-    let optionSelected = false;
-    let ifWrong = false;
-    let isLastQuestion = false;
+    const startButton = document.getElementsByClassName('start')[0];
+    const timerElement = document.getElementById('timerValue');
+    let timerInterval;
 
-    // Function to fetch questions from the API
-    async function fetchQuestions() {
-        try {
-            const response = await fetch('/api/python-questions/');
-            const data = await response.json();
-            quizQuestions = data;
-            loadQuestion();
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    startButton.addEventListener('click', () => {
+        startButton.remove();
+        started();
 
-    // Function to load the current question
-    function loadQuestion() {
-        const currentQuestion = quizQuestions[currentQuestionIndex];
+        let timerDuration = 1; // Start from 0 seconds
+        timerInterval = setInterval(() => {
+            timerElement.textContent = timerDuration ;
+            timerDuration++;
+        }, 1000);
+    })
+    
 
-        const quizQuestionId = currentQuestion.id;
-        const quizOptions = document.getElementsByClassName('option');
 
-        Array.from(document.getElementsByClassName('option')).forEach((option) => {
-            option.style.backgroundColor = '';
-        })
+    // ------------ works -------------
+    function started() {
+        document.getElementsByClassName('start-quiz')[0].classList.toggle('hidden');
 
-        quizOptions[0].textContent = `A: ${currentQuestion.option1}`;
-        quizOptions[1].textContent = `B: ${currentQuestion.option2}`;
-        quizOptions[2].textContent = `C: ${currentQuestion.option3}`;
-        quizOptions[3].textContent = `D: ${currentQuestion.option4}`;
+        let currentQuestionIndex = 0;
+        let quizQuestions = []; // Array to store questions fetched from the API
+        let optionSelected = false;
+        let ifWrong = false;
+        let isLastQuestion = false;
 
-        const questionElement = document.querySelector('h3');
-        questionElement.setAttribute('data-id', quizQuestionId);
-        questionElement.textContent = `Question: ${currentQuestion.question_text}`;
+        // correct answers
+        let correctAnswers = 0;
 
-    }
 
-    // Event listener for options
-    Array.from(document.getElementsByClassName('option')).forEach((option) => {
-        option.addEventListener('click', async () => {
-            if (optionSelected) {
-                return;
-            }
-            optionSelected = true;
-
+        // Function to fetch questions from the API
+        async function fetchQuestions() {
             try {
-                const id = quizQuestions[currentQuestionIndex].id;
-                
-                const response = await fetch(`/api/python-questions/${id}`, {})
+                const response = await fetch(`/api/python-questions/`);
                 const data = await response.json();
+                quizQuestions = data;
+                loadQuestion();
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
-                option.style.backgroundColor = 'orange';
+        // Function to load the current question
+        function loadQuestion() {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
 
-                Array.from(document.getElementsByClassName('option')).forEach((option) => {
-                    option.style.cursor = 'default';
-                })
+            const quizQuestionId = currentQuestion.id;
+            const quizOptions = document.getElementsByClassName('option');
 
-                currentQuestionIndex++;
-                if (currentQuestionIndex < quizQuestions.length) {
-                    if (currentQuestionIndex === quizQuestions.length) {
-                        isLastQuestion = true;
-                    }
-                    setTimeout(() => {
+            Array.from(document.getElementsByClassName('option')).forEach((option) => {
+                option.style.backgroundColor = '';
+            })
+
+            quizOptions[0].textContent = `A: ${currentQuestion.option1}`;
+            quizOptions[1].textContent = `B: ${currentQuestion.option2}`;
+            quizOptions[2].textContent = `C: ${currentQuestion.option3}`;
+            quizOptions[3].textContent = `D: ${currentQuestion.option4}`;
+
+            const questionElement = document.querySelector('h3');
+            questionElement.setAttribute('data-id', quizQuestionId);
+            questionElement.textContent = `Question: ${currentQuestion.question_text}`;
+
+        }
+
+        // Event listener for options
+        Array.from(document.getElementsByClassName('option')).forEach((option) => {
+            option.addEventListener('click', async () => {
+                if (optionSelected) {
+                    return;
+                }
+                optionSelected = true;
+
+                try {
+                    const id = quizQuestions[currentQuestionIndex].id;
+
+                    const response = await fetch(`/api/python-questions/${id}`, {})
+                    const data = await response.json();
+
+                    option.style.backgroundColor = 'orange';
+
+                    Array.from(document.getElementsByClassName('option')).forEach((option) => {
+                        option.style.cursor = 'default';
+                    })
+
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < quizQuestions.length) {
+                        if (currentQuestionIndex === quizQuestions.length) {
+                            isLastQuestion = true;
+                        }
+                        setTimeout(() => {
+                            if (data['correct_option'] === option.textContent.trim().substring(0, 1)) {
+                                option.style.backgroundColor = 'green';
+                                correctAnswers++;
+
+                            } else {
+                                option.style.backgroundColor = 'red';
+                                ifWrong = true;
+                            }
+
+                            Array.from(document.getElementsByClassName('option')).forEach((option) => {
+                                if (ifWrong) {
+                                    setTimeout(() => {
+                                        if (data['correct_option'] === option.textContent.trim().substring(0, 1)) {
+                                            option.style.backgroundColor = 'green';
+                                        }
+                                        const button = document.querySelector('button');
+                                        button.style.display = 'block';
+                                        button.addEventListener('click', () => {
+                                            button.style.display = 'none';
+                                            optionSelected = false;
+                                            loadQuestion();
+                                        })
+                                    }, 1000);
+                                }
+                            })
+                        }, 1000);
+
+                        // const button = document.querySelector('button');
+                        // button.classList.toggle('hidden');
+                        // button.addEventListener('click', () => {
+                        //     button.classList.toggle('hidden');
+                        //     optionSelected = false;
+                        //     loadQuestion();
+                        // })
+
+                    } else {
                         if (data['correct_option'] === option.textContent.trim().substring(0, 1)) {
                             option.style.backgroundColor = 'green';
+                            correctAnswers++;
+
                         } else {
                             option.style.backgroundColor = 'red';
                             ifWrong = true;
@@ -79,70 +142,85 @@ document.addEventListener('DOMContentLoaded', function () {
                                     if (data['correct_option'] === option.textContent.trim().substring(0, 1)) {
                                         option.style.backgroundColor = 'green';
                                     }
-                                    const button = document.querySelector('button');
-                                    button.style.display = 'block';
-                                    button.addEventListener('click', () => {
-                                        button.style.display = 'none';
-                                        optionSelected = false;
-                                        loadQuestion();
-                                    })
                                 }, 1000);
                             }
                         })
-                    }, 1000);
+                        const button = document.querySelector('button');
+                        button.textContent = 'See Result';
+                        clearInterval(timerInterval);
+                        // console.log(timerElement.textContent.split(' seconds')[0]);
+                        // console.log(correctAnswers);
 
-                    // const button = document.querySelector('button');
-                    //     button.classList.toggle('hidden');
-                    //     button.addEventListener('click', () => {
-                    //         button.classList.toggle('hidden');
-                    //         optionSelected = false;
-                    //         loadQuestion();
-                    //     })
-                } else {
-                    if (data['correct_option'] === option.textContent.trim().substring(0, 1)) {
-                        option.style.backgroundColor = 'green';
-                    } else {
-                        option.style.backgroundColor = 'red';
-                        ifWrong = true;
+                        button.style.display = 'block';
+                        button.addEventListener('click', async () => {
+                            button.style.display = 'none';
+                            document.getElementsByClassName('quiz')[0].innerHTML = '';
+                            // hide option / write text
+
+                            try {
+                                const options = {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRFToken': getCSRFToken()
+                                    },
+                                    body: JSON.stringify({
+                                        'finish_time': timerElement.textContent.split(' seconds')[0],
+                                        'correct_answers': correctAnswers
+                                    })
+                                };
+
+                                await fetch('/api/save-quiz-result/', options);
+                              
+                            } catch (error) {
+                                console.log('Error' + error);
+                            }
+
+                            try {
+
+                                const response = await fetch('/api/get-username');
+                                const data = await response.json();
+
+                                //  works
+                                const h4 = document.createElement('h4');
+                                h4.textContent = 'Congratulations ' + data['username'] + '!';
+                                h4.setAttribute('class', 'text-4xl text-center pt-10 text-white');
+
+                                const p = document.createElement('p');
+                                p.textContent = `Your result is: ${correctAnswers} correct answers! Done for ${timerElement.textContent} seconds.`;
+                                p.setAttribute('class', 'text-3xl text-center pt-10 text-white');
+
+                                const tryAgainAHref = document.createElement('a');
+                                tryAgainAHref.textContent = 'Try Again?';
+                                tryAgainAHref.setAttribute('class', 'flex justify-center items-center w-1/6 mt-10 mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded');
+                                tryAgainAHref.setAttribute('href', '/python-quiz');
+
+                                document.getElementsByClassName('quiz')[0].appendChild(h4);
+                                document.getElementsByClassName('quiz')[0].appendChild(p);
+                                document.getElementsByClassName('quiz')[0].appendChild(tryAgainAHref);
+
+                            } catch (error) {
+                                console.log(error);
+                            }
+
+                        })
                     }
 
-                    Array.from(document.getElementsByClassName('option')).forEach((option) => {
-                        if (ifWrong) {
-                            setTimeout(() => {
-                                if (data['correct_option'] === option.textContent.trim().substring(0, 1)) {
-                                    option.style.backgroundColor = 'green';
-                                }
-                            }, 1000);
-                        }
-                    })
-                    const button = document.querySelector('button');
-                    button.textContent = 'End';
-                    button.style.display = 'block';
-                    button.addEventListener('click', () => {
-                        button.style.display = 'none';
-                        document.getElementsByClassName('quiz')[0].innerHTML = '';
-                        // hide option / write text
-
-                        const h4 = document.createElement('h4');
-                        h4.textContent = 'End';
-                        h4.setAttribute('class', 'text-4xl text-center pt-10 text-white');
-
-                        const p = document.createElement('p');
-                        p.textContent = 'Your result is: ....';
-                        p.setAttribute('class', 'text-3xl text-center pt-10 text-white');
-
-                        document.getElementsByClassName('quiz')[0].appendChild(h4);
-                        document.getElementsByClassName('quiz')[0].appendChild(p);
-
-                    })
+                } catch (error) {
+                    console.log(error);
                 }
-
-            } catch (error) {
-                console.log(error);
-            }
+            });
         });
-    });
 
-    fetchQuestions();
+        fetchQuestions();
 
+        function getCSRFToken() {
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('csrftoken='))
+                .split('=')[1];
+
+            return cookieValue;
+        }
+    }
 });
