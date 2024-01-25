@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    let currentURL = window.location.pathname;
+    currentURL = currentURL.replace(/^\/|\/$/g, '');
+
     const startButton = document.getElementsByClassName('start')[0];
     const timerElement = document.getElementById('timerValue');
     let timerInterval;
@@ -16,8 +19,6 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     
 
-
-    // ------------ works -------------
     function started() {
         document.getElementsByClassName('start-quiz')[0].classList.toggle('hidden');
 
@@ -155,7 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         button.addEventListener('click', async () => {
                             button.style.display = 'none';
                             document.getElementsByClassName('quiz')[0].innerHTML = '';
-                            // hide option / write text
 
                             try {
                                 const options = {
@@ -166,7 +166,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                     },
                                     body: JSON.stringify({
                                         'finish_time': timerElement.textContent.split(' seconds')[0],
-                                        'correct_answers': correctAnswers
+                                        'correct_answers': correctAnswers,
+                                        'quiz_name' : currentURL
                                     })
                                 };
 

@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from apps.quiz.models import PythonQuestions, PythonQuizResult
+from apps.quiz.models import PythonQuestions, QuizResult
 from apps.quiz.api.serializers import SingleQuestionSerializer, PythonQuestionsSerializer, GetRightAnswerSerializer, \
     PythonQuizResultSerializer
 
@@ -66,13 +66,14 @@ class SaveQuizResultAPIView(APIView):
             user = request.user
             correct_answers = int(request.data.get('correct_answers', 0))
             finish_time = int(request.data.get('finish_time', 0))
+            quiz_name = request.data.get('quiz_name', '')
+            quiz_name = quiz_name.split('-')[0].capitalize()
 
-            # TODO: rename dbs
-            result = PythonQuizResult.objects.create(
+            result = QuizResult.objects.create(
                 user=user,
                 correct_answers=correct_answers,
                 finish_time=finish_time,
-                quiz_name="Python",
+                quiz_name=quiz_name,
             )
 
             serializer = PythonQuizResultSerializer(result)
