@@ -30,12 +30,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         option.style.backgroundColor = 'red';
                         ifWrong = true;
                     }
+                    const section = document.querySelector('section');
 
                     const p = document.createElement('p');
                     p.textContent = 'Register for more questions!';
                     p.setAttribute('class', 'text-3xl text-center mt-10');
                     p.setAttribute('style', 'color: white;');
-                    document.body.appendChild(p);
+                    section.appendChild(p);
 
                     Array.from(quizOptions).forEach((option) => {
                         if (ifWrong) {
