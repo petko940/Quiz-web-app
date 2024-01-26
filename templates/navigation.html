@@ -29,6 +29,13 @@
 
         <ul class="flex gap-5">
             <li class="underline-on-hover">
+                <a href="{% url 'profile' user %}" class="block text-center p-4 text-gray-100">
+                    {% if user.is_authenticated %}
+                    Welcome, {{ user.username }}
+                    {% endif %}
+                </a>
+            </li>
+            <li class="underline-on-hover">
                 <a href="{% url 'leaderboard' %}" class="block text-center p-4 text-gray-100">
                     leaderboards
                 </a>

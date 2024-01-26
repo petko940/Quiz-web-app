@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.http import Http404
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic as views, View
 
+from apps.quiz.models import QuizResult
 from apps.users.forms import RegistrationForm, LoginForm
 from django.contrib.auth import get_user_model, login, authenticate
 
@@ -52,3 +54,27 @@ class Logout(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         return redirect('home')
+
+
+class ProfileView(LoginRequiredMixin, views.DetailView):
+    model = UserModel
+    template_name = 'users/profile.html'
+
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['best_results'] = (QuizResult.objects.filter(user=self.get_object()).
+                                   order_by('quiz_name', '-correct_answers', 'finish_time')[:7])
+        return context
+
+    def get(self, request, *args, **kwargs):
+        try:
+            user = self.get_object()
+            if request.user == user:
+                return super().get(request, *args, **kwargs)
+            else:
+                return redirect(reverse('profile', kwargs={'username': str(request.user.username)}))
+        except Http404:
+            return redirect(reverse('profile', kwargs={'username': str(request.user.username)}))
