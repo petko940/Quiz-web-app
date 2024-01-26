@@ -9,17 +9,21 @@
 {% block content %}
 
 <style>
-    .custom-transition {
-        transition: background 0.3s ease-in-out;
-    }
-
-    .custom-transition:hover {
-        background: linear-gradient(to right, from-red-700, to-blue-500);
+    body {
+        background-image: url("{% static 'images/background/home-background.jpg' %}");
+        background-size: cover;
+        background-repeat: no-repeat;
     }
 </style>
 
 
-<h1 class="text-teal-400 text-6xl text-center mt-10">Home page</h1>
+<h1 class="text-slate-200 text-6xl text-center mt-10 w-3/4 mx-auto">
+    Welcome to coding quiz platform!
+</h1>
+
+<h2 class="text-slate-200 text-3xl text-center w-3/4 mx-auto pt-5">
+    Explore quizzes dedicated to programming languages
+</h2>
 
 {% if not user.is_authenticated %}
 

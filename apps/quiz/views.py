@@ -36,10 +36,11 @@ class LeaderboardView(views.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # context['leaderboard_python'] = QuizResult.objects.all()
-        sorted_by_correct_answers = self.queryset.filter(quiz_name='Python').order_by('-correct_answers', 'finish_time')
+        sorted_by_correct_answers_python = (self.queryset.filter(quiz_name='Python', correct_answers__gt=0)
+                                            .order_by('-correct_answers', 'finish_time'))
 
         page = self.request.GET.get('page', 1)
-        paginator = Paginator(sorted_by_correct_answers, self.paginate_by)
+        paginator = Paginator(sorted_by_correct_answers_python, self.paginate_by)
 
         try:
             python_leaderboard = paginator.page(page)
