@@ -10,6 +10,14 @@ login and signup
 
 {% block content %}
 
+<style>
+    body {
+        background-image: url("{% static 'images/background/auth-background.jpg' %}");
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+</style>
+
 <section class="rounded mx-auto mt-10 text-gray-400 bg-slate-900 body-font w-2/5">
     <form method="POST" class="">
         {% csrf_token %}
