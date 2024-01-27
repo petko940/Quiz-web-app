@@ -5,26 +5,46 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views import generic as views
 
 from apps.quiz.mixins import LogoutRequiredMixin
-from apps.quiz.models import PythonQuestions, QuizResult
+from apps.quiz.models import (PythonQuestions,
+                              JSQuestions,
+                              QuizResult)
 
 
 # Create your views here.
 class QuizView(LogoutRequiredMixin, views.TemplateView):
     template_name = 'quiz/single-question.html'
 
+    @staticmethod
+    def get_question_model():
+        question_models = [PythonQuestions, JSQuestions, ]
+        return random.choice(question_models)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['question'] = random.choice(PythonQuestions.objects.all())
+        # context['question'] = random.choice(PythonQuestions.objects.all())
+        question_model = self.get_question_model()
+
+        context['question'] = random.choice(question_model.objects.all())
         return context
 
 
-class PythonQuiz(LoginRequiredMixin, views.TemplateView):
+class PythonQuizView(LoginRequiredMixin, views.TemplateView):
     template_name = 'quiz/python-quiz.html'
     login_url = 'home'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['questions'] = PythonQuestions.objects.all()
+        return context
+
+
+class JSQuizView(LoginRequiredMixin, views.TemplateView):
+    template_name = 'quiz/js-quiz.html'
+    login_url = 'home'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['questions'] = JSQuestions.objects.all()
         return context
 
 
