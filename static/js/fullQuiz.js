@@ -4,11 +4,13 @@ document.addEventListener('DOMContentLoaded', function () {
     currentURL = currentURL.replace(/^\/|\/$/g, '');
 
     const startButton = document.getElementsByClassName('start')[0];
+    const currentQuestionNumber = document.getElementsByClassName('current-question')[0];
     const timerElement = document.getElementById('timerValue');
     let timerInterval;
 
     startButton.addEventListener('click', () => {
         startButton.remove();
+        currentQuestionNumber.classList.toggle('hidden');
         started();
 
         let timerDuration = 1; // Start from 0 seconds
@@ -67,26 +69,30 @@ document.addEventListener('DOMContentLoaded', function () {
         // }
 
         function loadQuestion() {
-            const currentQuestion = quizQuestions[currentQuestionIndex];
+            if (!isLastQuestion) {
+                const currentQuestion = quizQuestions[currentQuestionIndex];
 
-            // Shuffle the options array
-            const shuffledOptions = shuffleArray([
-                currentQuestion.option1,
-                currentQuestion.option2,
-                currentQuestion.option3,
-                currentQuestion.option4
-            ]);
+                // Shuffle the options array
+                const shuffledOptions = shuffleArray([
+                    currentQuestion.option1,
+                    currentQuestion.option2,
+                    currentQuestion.option3,
+                    currentQuestion.option4
+                ]);
 
-            const quizOptions = document.getElementsByClassName('option');
-            
-            Array.from(document.getElementsByClassName('option')).forEach((option, index) => {
-                option.style.backgroundColor = '';
-                option.textContent = `${String.fromCharCode(65 + index)}: ${shuffledOptions[index]}`;
-            });
+                // const quizOptions = document.getElementsByClassName('option');
 
-            const questionElement = document.querySelector('h3');
-            questionElement.setAttribute('data-id', currentQuestion.id);
-            questionElement.textContent = `Question: ${currentQuestion.question_text}`;
+                Array.from(document.getElementsByClassName('option')).forEach((option, index) => {
+                    option.style.backgroundColor = '';
+                    option.textContent = `${String.fromCharCode(65 + index)}: ${shuffledOptions[index]}`;
+                });
+
+                const questionElement = document.querySelector('h3');
+                questionElement.setAttribute('data-id', currentQuestion.id);
+                questionElement.textContent = `Question: ${currentQuestion.question_text}`;
+
+                currentQuestionNumber.textContent = `${currentQuestionIndex + 1}/${quizQuestions.length}`;
+            }
         }
 
         // Function to shuffle an array using Fisher-Yates algorithm
@@ -139,20 +145,29 @@ document.addEventListener('DOMContentLoaded', function () {
                                     setTimeout(() => {
                                         if (data['correct_option'] === option.textContent.trim().substring(3)) {
                                             option.style.backgroundColor = 'green';
-                                        }  
+                                        }
+                                        const button = document.querySelector('button');
+                                        button.style.display = 'block';
+                                        button.addEventListener('click', () => {
+                                            button.style.display = 'none';
+                                            optionSelected = false;
+                                            loadQuestion();
+                                        })
                                     }, 1000);
+                                } else {
+                                    const button = document.querySelector('button');
+                                    button.style.display = 'block';
+                                    button.addEventListener('click', () => {
+                                        button.style.display = 'none';
+                                        optionSelected = false;
+                                        loadQuestion();
+                                    })
                                 }
-                                const button = document.querySelector('button');
-                                button.style.display = 'block';
-                                button.addEventListener('click', () => {
-                                    button.style.display = 'none';
-                                    optionSelected = false;
-                                    loadQuestion();
-                                })
                             })
                         }, 1000);
 
                     } else {
+                        isLastQuestion = true;
                         option.style.backgroundColor = 'orange';
 
                         setTimeout(() => {
@@ -170,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     setTimeout(() => {
                                         if (data['correct_option'] === option.textContent.trim().substring(3)) {
                                             option.style.backgroundColor = 'green';
-                                        }  
+                                        }
                                     }, 1000);
                                 }
                                 const button = document.querySelector('button');
@@ -182,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 })
                             })
                         }, 1000);
-                       
+
                         const button = document.querySelector('button');
                         button.textContent = 'See Result';
                         clearInterval(timerInterval);
