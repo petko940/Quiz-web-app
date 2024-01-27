@@ -1,12 +1,17 @@
 import random
 
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from apps.quiz.models import PythonQuestions, QuizResult
-from apps.quiz.api.serializers import SingleQuestionSerializer, PythonQuestionsSerializer, GetRightAnswerSerializer, \
-    PythonQuizResultSerializer
+from apps.quiz.models import PythonQuestions, QuizResult, JSQuestions
+from apps.quiz.api.serializers import (SingleQuestionSerializer,
+                                       PythonQuestionsSerializer,
+                                       GetRightPythonAnswerSerializer,
+                                       QuizResultSerializer,
+                                       JSQuestionsSerializer,
+                                       GetRightJSAnswerSerializer)
 
 
 class SingleQuestionAPIView(APIView):
@@ -24,42 +29,50 @@ class SingleQuestionAPIView(APIView):
         return Response()
 
 
-# ----------------------------------
-class GetRightAnswerAPIView(APIView):
-    def get(self, request, pk, *args, **kwargs):
-        try:
-            # TODO: add dbs
-            question = PythonQuestions.objects.get(pk=pk)
-        except PythonQuestions.DoesNotExist:
-            question = None
+class BaseQuestionAPIView(APIView):
+    model = None  # To be defined in subclasses
 
-        if question:
-            serializer = GetRightAnswerSerializer(question)
-            return Response(serializer.data, status=200)
-
-        return Response()
+    def get_object(self, pk):
+        return get_object_or_404(self.model, pk=pk)
 
 
-# class ChooseTypeQuizAPIView(APIView):
-#     result = None
-#
-#     def post(self, request, *args, **kwargs):
-#         data = request.data
-#         self.result = data.get('result')
-#         print(self.result)
-#         return Response({'result': self.result.get('res')})
-
-
+# python
 class PythonQuestionsAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        # count of questions
-        # count = request.GET.get('count', 10)
-        count = 1
+        count = 15
         questions = random.sample(list(PythonQuestions.objects.all()), count)
         serializer = PythonQuestionsSerializer(questions, many=True)
         return Response(serializer.data)
 
 
+class GetRightPythonAnswerAPIView(BaseQuestionAPIView):
+    model = PythonQuestions
+
+    def get(self, request, pk, *args, **kwargs):
+        question = self.get_object(pk)
+        serializer = GetRightPythonAnswerSerializer(question)
+        return Response(serializer.data, status=200)
+
+
+# Javascript
+class JSQuestionsAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        count = 1
+        questions = random.sample(list(JSQuestions.objects.all()), count)
+        serializer = JSQuestionsSerializer(questions, many=True)
+        return Response(serializer.data)
+
+
+class GetRightJSAnswerAPIView(BaseQuestionAPIView):
+    model = JSQuestions
+
+    def get(self, request, pk, *args, **kwargs):
+        question = self.get_object(pk)
+        serializer = GetRightJSAnswerSerializer(question)
+        return Response(serializer.data, status=200)
+
+
+# TODO: ???
 class SaveQuizResultAPIView(APIView):
     def post(self, request, *args, **kwargs):
         try:
@@ -76,7 +89,7 @@ class SaveQuizResultAPIView(APIView):
                 quiz_name=quiz_name,
             )
 
-            serializer = PythonQuizResultSerializer(result)
+            serializer = QuizResultSerializer(result)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

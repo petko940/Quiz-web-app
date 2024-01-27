@@ -4,7 +4,7 @@ from apps.users.models import CustomUser
 
 
 # Create your models here.
-class PythonQuestions(models.Model):
+class BaseQuestion(models.Model):
     question_text = models.CharField(max_length=200)
     option1 = models.CharField(max_length=100)
     option2 = models.CharField(max_length=100)
@@ -12,7 +12,16 @@ class PythonQuestions(models.Model):
     option4 = models.CharField(max_length=100)
     correct_option = models.CharField(max_length=100)
 
-    objects = models.Manager()
+    class Meta:
+        abstract = True
+
+
+class PythonQuestions(BaseQuestion):
+    pass
+
+
+class JSQuestions(BaseQuestion):
+    pass
 
 
 class QuizResult(models.Model):
