@@ -12,7 +12,8 @@ Leaderboard
 {% block content %}
 
 <h1 class="text-4xl uppercase text-white font-medium flex justify-center my-5">
-    <i class="fa-solid fa-crown pr-3" style="color: #FFD43B;"></i>Leaderboard<i class="fa-solid fa-crown pl-3" style="color: #FFD43B;"></i>
+    <i class="fa-solid fa-crown pr-3" style="color: #FFD43B;"></i>Leaderboard<i class="fa-solid fa-crown pl-3"
+        style="color: #FFD43B;"></i>
 </h1>
 
 <section class="w-5/6 h-[50vh] mx-auto flex flex-wrap gap-10 justify-center mt-10">
@@ -21,7 +22,9 @@ Leaderboard
         <h1 class="text-2xl text-white bg-gradient-to-r from-cyan-500 to-orange-500">Python</h1>
 
         {% for x in python_leaderboard %}
-        <h3 class="text-xl text-white">{{ x.user }} - {{ x.correct_answers }}/15 - Time: {{ x.finish_time }} seconds</h3>
+        <h3 class="text-xl text-white">
+            {{ x.user }} - {{ x.correct_answers }}/15 - Time: {{ x.finish_time }} seconds
+        </h3>
         {% endfor %}
 
         <div class="mb-10"></div>
@@ -29,17 +32,18 @@ Leaderboard
         <div class="text-2xl text-white select-none">
             <span class="">
                 {% if python_leaderboard.has_previous %}
-                <a href="?page=1"><i class="fa-solid fa-angles-left"></i></a>
-                <a href="?page={{ python_leaderboard.previous_page_number }}"><i class="fa-solid fa-angle-left"></i></a>
+                <a href="?page_python=1"><i class="fa-solid fa-angles-left"></i></a>
+                <a href="?page_python={{ python_leaderboard.previous_page_number }}"><i class="fa-solid fa-angle-left"></i></a>
                 {% endif %}
-    
+
                 <span class="">
                     {{ python_leaderboard.number }} / {{ python_leaderboard.paginator.num_pages }}
                 </span>
-    
+
                 {% if python_leaderboard.has_next %}
-                <a href="?page={{ python_leaderboard.next_page_number }}"><i class="fa-solid fa-angle-right"></i></a>
-                <a href="?page={{ python_leaderboard.paginator.num_pages }}"><i class="fa-solid fa-angles-right"></i></a>
+                <a href="?page_python={{ python_leaderboard.next_page_number }}"><i class="fa-solid fa-angle-right"></i></a>
+                <a href="?page_python={{ python_leaderboard.paginator.num_pages }}"><i
+                        class="fa-solid fa-angles-right"></i></a>
                 {% endif %}
             </span>
         </div>
@@ -49,9 +53,31 @@ Leaderboard
         <h1 class="text-2xl text-white bg-gradient-to-r from-yellow-600 to-yellow-600">JavaScript</h1>
 
         {% for x in javascript_leaderboard %}
-        <h3 class="text-xl text-white">{{ x.user }} - {{ x.correct_answers }}</h3>
+        <h3 class="text-xl text-white">
+            {{ x.user }} - {{ x.correct_answers }}/15 - Time: {{ x.finish_time }} seconds
+        </h3>
         {% endfor %}
 
+        <div class="mb-10"></div>
+
+        <div class="text-2xl text-white select-none">
+            <span class="">
+                {% if javascript_leaderboard.has_previous %}
+                <a href="?page_js=1"><i class="fa-solid fa-angles-left"></i></a>
+                <a href="?page_js={{ javascript_leaderboard.previous_page_number }}"><i class="fa-solid fa-angle-left"></i></a>
+                {% endif %}
+
+                <span class="">
+                    {{ javascript_leaderboard.number }} / {{ javascript_leaderboard.paginator.num_pages }}
+                </span>
+
+                {% if javascript_leaderboard.has_next %}
+                <a href="?page_js={{ javascript_leaderboard.next_page_number }}"><i class="fa-solid fa-angle-right"></i></a>
+                <a href="?page_js={{ javascript_leaderboard.paginator.num_pages }}"><i
+                        class="fa-solid fa-angles-right"></i></a>
+                {% endif %}
+            </span>
+        </div>
     </div>
 
 </section>
