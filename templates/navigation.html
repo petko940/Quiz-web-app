@@ -30,11 +30,13 @@
         <ul class="flex gap-5">
             <li class="underline-on-hover">
                 <a href="{% url 'leaderboard' %}" class="block text-center p-4 text-gray-100">
-                    leaderboards
+                    Leaderboards
                 </a>
             </li>
             <li class="underline-on-hover">
-                <a href="/" class="block text-center p-4 text-gray-100">test</a>
+                <a href="{% url 'recent-quizzes' %}" class="block text-center p-4 text-gray-100">
+                    Recent
+                </a>
             </li>
             <li class="underline-on-hover">
                 <a href="/" class="block text-center p-4 text-gray-100">test</a>

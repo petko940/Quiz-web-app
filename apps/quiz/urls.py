@@ -11,8 +11,9 @@ from apps.quiz.api.views import (SingleQuestionAPIView,
 
 from apps.quiz.views import (QuizView,
                              PythonQuizView,
-                             LeaderboardView,
                              JSQuizView,
+                             LeaderboardView,
+                             RecentQuizView
                              )
 
 urlpatterns = [
@@ -23,7 +24,10 @@ urlpatterns = [
     # leaderboard
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
 
-    # api
+    # recent-quizzes
+    path('recent-quizzes/', RecentQuizView.as_view(), name='recent-quizzes'),
+
+    # apis
     path('api/<int:pk>/', SingleQuestionAPIView.as_view(), name='api-single-question'),
 
     path('api/python-questions/', PythonQuestionsAPIView.as_view(), name='api-python-questions'),
