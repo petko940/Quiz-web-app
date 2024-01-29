@@ -29,13 +29,6 @@
 
         <ul class="flex gap-5">
             <li class="underline-on-hover">
-                <a href="{% url 'profile' user %}" class="block text-center p-4 text-gray-100">
-                    {% if user.is_authenticated %}
-                    Welcome, {{ user.username }}
-                    {% endif %}
-                </a>
-            </li>
-            <li class="underline-on-hover">
                 <a href="{% url 'leaderboard' %}" class="block text-center p-4 text-gray-100">
                     leaderboards
                 </a>
@@ -48,25 +41,32 @@
             </li>
         </ul>
 
-        <ul class="flex gap-3">
+        <ul class="flex gap-5">
             {% if user.is_authenticated %}
             <li class="underline-on-hover">
+                <a href="{% url 'profile' user %}" class="block text-center p-4 text-gray-100">
+                    {% if user.is_authenticated %}
+                    Welcome, {{ user.username }}
+                    {% endif %}
+                </a>
+            </li>
+            <li class="underline-on-hover">
                 <a href="{% url 'logout' %}" class="block text-center p-4 text-gray-100">
-                    logout
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </li>
 
             {% else %}
             <li class="underline-on-hover">
-                <a href="{% url 'register' %}" class="block text-center p-4 text-gray-100">
-                    register
-                </a>
-            </li>
-            <li class="underline-on-hover">
                 <a href="{% url 'login' %}" class="block text-center p-4 text-gray-100">
-                    login
+                    Log in
                 </a>
             </li>
+            <li class="bg-orange-700">
+                <a href="{% url 'register' %}" class="block text-center p-4 text-gray-100">
+                    Register
+                </a>
+            </li>          
             {% endif %}
         </ul>
     </nav>

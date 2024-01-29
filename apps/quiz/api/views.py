@@ -40,7 +40,7 @@ class BaseQuestionAPIView(APIView):
 class PythonQuestionsAPIView(APIView):
     def get(self, request, *args, **kwargs):
         count = 15
-        questions = random.sample(list(PythonQuestions.objects.all()), count)
+        questions = set(random.sample(list(PythonQuestions.objects.all()), count))
         serializer = PythonQuestionsSerializer(questions, many=True)
         return Response(serializer.data)
 
@@ -58,7 +58,7 @@ class GetRightPythonAnswerAPIView(BaseQuestionAPIView):
 class JSQuestionsAPIView(APIView):
     def get(self, request, *args, **kwargs):
         count = 1
-        questions = random.sample(list(JSQuestions.objects.all()), count)
+        questions = set(random.sample(list(JSQuestions.objects.all()), count))
         serializer = JSQuestionsSerializer(questions, many=True)
         return Response(serializer.data)
 
