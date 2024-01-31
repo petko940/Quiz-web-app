@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Profile{% endblock %}
+
+{% block navigation %}
+{% endblock %}
+
+{% block content %}
+
+
+<div class="flex justify-center flex-col p-10 border-2 border-spacing-5 rounded w-3/5 mx-auto mt-5">
+    <h1 class="text-3xl text-slate-200 text-center mb-7">
+        Confirm Account Deletion
+    </h1>
+
+    <h2 class="text-2xl text-slate-200 text-center">
+        Are you sure you want to delete your account ?
+    </h2>
+
+    <form action="" method="POST" class="text-center text-2xl">
+
+        {% csrf_token %}
+        {{ form.username }}
+
+
+        <div class="flex justify-center gap-10 pt-5 text-white mb-3">
+            <a href="{% url 'settings' user %}" class="btn font-bold rounded-md px-3 py-1 bg-emerald-600">Back</a>
+            <button class="btn font-bold rounded-md px-3 py-1 bg-red-800">Delete</button>
+        </div>
+
+    </form>
+
+</div>
+
+
+{% endblock %}

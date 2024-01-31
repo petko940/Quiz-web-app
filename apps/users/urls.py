@@ -6,7 +6,8 @@ from apps.users.views import (RegisterView,
                               SettingProfileView,
                               ChangeUsernameView,
                               ChangeEmailView,
-                              ChangePasswordView
+                              ChangePasswordView,
+                              DeleteProfileView
                               )
 
 urlpatterns = [
@@ -21,6 +22,7 @@ urlpatterns = [
         path('change-username/', ChangeUsernameView.as_view(), name='change_username'),
         path('change-email/', ChangeEmailView.as_view(), name='change_email'),
         path('change-password/', ChangePasswordView.as_view(), name='change_password'),
+        path('delete-profile/', DeleteProfileView.as_view(), name='delete_profile'),
     ])),
 
 ]

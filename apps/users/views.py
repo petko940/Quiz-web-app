@@ -130,10 +130,10 @@ class ChangeEmailView(BaseUserUpdateView):
         if ('google-oauth2' in request.user.social_auth.values_list('provider', flat=True) or
                 'facebook' in request.user.social_auth.values_list('provider', flat=True)):
             return redirect('home')
-        return super().get(request, *args, **kwargs)  
+        return super().get(request, *args, **kwargs)
 
 
-class ChangePasswordView(LoginRequiredMixin, RedirectToCurrentUserMixin, PasswordChangeView):
+class ChangePasswordView(LoginRequiredMixin, PasswordChangeView):
     template_name = 'users/change_password.html'
     success_url = reverse_lazy('profile')
     form_class = ChangePasswordForm
@@ -146,3 +146,9 @@ class ChangePasswordView(LoginRequiredMixin, RedirectToCurrentUserMixin, Passwor
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'username': self.request.user.username})
+
+
+class DeleteProfileView(LoginRequiredMixin, RedirectToCurrentUserMixin, views.DeleteView):
+    model = UserModel
+    success_url = reverse_lazy('home')
+    template_name = 'users/delete_profile.html'
