@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.core.validators import MinLengthValidator
 
 from apps.users.validators import validate_username, validate_unique_email
@@ -140,9 +140,38 @@ class ChangeUsernameForm(forms.ModelForm):
         widgets = {
             'username': forms.TextInput(
                 attrs={
-                    'placeholder': 'Username',
-                    'class': 'text-center p-1',
+                    'placeholder': 'New Username',
+                    'class': 'text-center p-1 w-full',
                     'autocomplete': 'off',
                 }
             )
         }
+
+
+class ChangeEmailForm(forms.ModelForm):
+    class Meta:
+        model = UserModel
+        fields = ['email']
+        widgets = {
+            'email': forms.TextInput(
+                attrs={
+                    'placeholder': 'New Email',
+                    'class': 'text-center p-1 w-full',
+                    'autocomplete': 'off',
+                }
+            )
+        }
+
+
+class ChangePasswordForm(PasswordChangeForm):
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(user, *args, **kwargs)
+        self.fields['old_password'].widget.attrs['placeholder'] = 'Old Password'
+        self.fields['old_password'].widget.attrs['class'] = 'text-center p-1 w-full'
+        self.fields['new_password1'].widget.attrs['placeholder'] = 'New Password'
+        self.fields['new_password1'].widget.attrs['class'] = 'text-center p-1 w-full'
+        self.fields['new_password2'].widget.attrs['placeholder'] = 'Confirm New Password'
+        self.fields['new_password2'].widget.attrs['class'] = 'text-center p-1 w-full'
+
+    class Meta:
+        model = UserModel

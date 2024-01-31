@@ -5,6 +5,8 @@ from apps.users.views import (RegisterView,
                               ProfileView,
                               SettingProfileView,
                               ChangeUsernameView,
+                              ChangeEmailView,
+                              ChangePasswordView
                               )
 
 urlpatterns = [
@@ -16,7 +18,9 @@ urlpatterns = [
     path('profile/<str:username>/', include([
         path('', ProfileView.as_view(), name='profile'),
         path('settings/', SettingProfileView.as_view(), name='settings'),
-        path('change_username/', ChangeUsernameView.as_view(), name='change_username'),
+        path('change-username/', ChangeUsernameView.as_view(), name='change_username'),
+        path('change-email/', ChangeEmailView.as_view(), name='change_email'),
+        path('change-password/', ChangePasswordView.as_view(), name='change_password'),
     ])),
 
 ]

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Profile{% endblock %}
+
+{% block navigation %}
+{% endblock %}
+
+{% block content %}
+
+
+<div class="flex justify-center flex-col p-10 border-2 border-spacing-5 rounded w-2/5 mx-auto mt-5">
+    <h1 class="text-3xl text-slate-200 text-center mb-7">Change Email</h1>
+
+    <form action="" method="POST" class="text-center text-2xl">
+
+        {% csrf_token %}
+        {{ form.email }}
+
+        <div class="flex justify-evenly pt-5">
+            <a href="{% url 'settings' user %}" class="btn font-bold rounded-md px-3 py-1 bg-teal-600 text-white">Back</a>
+            <button class="btn font-bold rounded-md px-3 py-1 bg-teal-800 text-white">Change</button>
+        </div>
+
+        <div class="auth-errors">
+            {% if form.errors %}
+            <div class="errorlist">
+                {% for field in form %}
+                {% for error in field.errors %}
+                <p class="error">{{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </form>
+
+</div>
+
+
+{% endblock %}

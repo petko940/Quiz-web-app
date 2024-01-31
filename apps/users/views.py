@@ -1,13 +1,13 @@
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views import generic as views, View
 
 from apps.quiz.models import QuizResult
-from apps.users.forms import RegistrationForm, LoginForm, ChangeUsernameForm
+from apps.users.forms import RegistrationForm, LoginForm, ChangeUsernameForm, ChangeEmailForm, ChangePasswordForm
 from django.contrib.auth import get_user_model, login, authenticate
 
 UserModel = get_user_model()
@@ -90,20 +90,14 @@ class SettingProfileView(LoginRequiredMixin, RedirectToCurrentUserMixin, views.D
     model = UserModel
 
 
-class ChangeUsernameView(LoginRequiredMixin, RedirectToCurrentUserMixin, views.UpdateView):
+class BaseUserUpdateView(LoginRequiredMixin, RedirectToCurrentUserMixin, views.UpdateView):
     model = UserModel
-    template_name = 'users/change_username.html'
-    form_class = ChangeUsernameForm
+    template_name = None
+    form_class = None
     success_url = reverse_lazy('profile')
 
     def get_object(self, queryset=None):
         return self.request.user
-
-    def get_initial(self):
-        initial = super().get_initial()
-        # Set 'username' to an empty string to start with an empty field
-        initial['username'] = ''
-        return initial
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -111,3 +105,40 @@ class ChangeUsernameView(LoginRequiredMixin, RedirectToCurrentUserMixin, views.U
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'username': self.object.username})
+
+
+class ChangeUsernameView(BaseUserUpdateView):
+    template_name = 'users/change_username.html'
+    form_class = ChangeUsernameForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['username'] = ''
+        return initial
+
+
+class ChangeEmailView(BaseUserUpdateView):
+    template_name = 'users/change_email.html'
+    form_class = ChangeEmailForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['email'] = ''
+        return initial
+
+
+class ChangePasswordView(LoginRequiredMixin, PasswordChangeView):
+    template_name = 'users/change_password.html'
+    success_url = reverse_lazy('profile')
+    form_class = ChangePasswordForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+
+        if self.request.user.username != kwargs['username']:
+            return redirect("access_denied_view")
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('profile', kwargs={'username': self.request.user.username})
