@@ -126,19 +126,23 @@ class ChangeEmailView(BaseUserUpdateView):
         initial['email'] = ''
         return initial
 
+    def get(self, request, *args, **kwargs):
+        if ('google-oauth2' in request.user.social_auth.values_list('provider', flat=True) or
+                'facebook' in request.user.social_auth.values_list('provider', flat=True)):
+            return redirect('home')
+        return super().get(request, *args, **kwargs)  
 
-class ChangePasswordView(LoginRequiredMixin, PasswordChangeView):
+
+class ChangePasswordView(LoginRequiredMixin, RedirectToCurrentUserMixin, PasswordChangeView):
     template_name = 'users/change_password.html'
     success_url = reverse_lazy('profile')
     form_class = ChangePasswordForm
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-
-        if self.request.user.username != kwargs['username']:
-            return redirect("access_denied_view")
-        return super().dispatch(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        if ('google-oauth2' in request.user.social_auth.values_list('provider', flat=True) or
+                'facebook' in request.user.social_auth.values_list('provider', flat=True)):
+            return redirect('home')
+        return super().get(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'username': self.request.user.username})
