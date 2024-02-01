@@ -11,10 +11,10 @@
 
 
 <h1 class="text-3xl text-lime-200 text-center mt-10 mb-3">Latest Quizzes</h1>
-<!-- 
-{% for quiz in recent_quizzes %}
-<h2>{{ quiz.user.username }} {{ quiz.quiz_name }} {{ quiz.correct_answers }}/15 done for {{ quiz.finish_time }}</h2>
-{% endfor %} -->
+
+{% if all_quizzes <= 10 %}
+<h2 class="text-2xl text-lime-50 text-center">Last 10 quizzes out of {{ all_quizzes }} total</h2>
+{% endif %}
 
 <table class="table-auto w-5/6 mx-auto">
     <thead>
@@ -26,7 +26,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for quiz in recent_quizzes reversed %}
+        {% for quiz in recent_quizzes %}
         <tr class="bg-gray-400 border">
             <td class="px-4 py-2 text-center text-stone-800">{{ quiz.user.username }}</td>
             <td class="px-4 py-2 text-center text-stone-800">{{ quiz.quiz_name }}</td>
