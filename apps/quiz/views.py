@@ -96,5 +96,11 @@ class RecentQuizzesView(views.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['recent_quizzes'] = QuizResult.objects.all()[10:]
+
+        if len(QuizResult.objects.all()) <= 10:
+            context['recent_quizzes'] = QuizResult.objects.all().order_by('-id')
+        else:
+            context['all_quizzes'] = QuizResult.objects.all().count()
+            context['recent_quizzes'] = QuizResult.objects.all().order_by('-id')[:10]
+
         return context
