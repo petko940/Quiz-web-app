@@ -11,6 +11,10 @@ Login
 {% block content %}
 
 <style>
+    header {
+        display: none;
+    }
+
     body {
         background-image: url("{% static 'images/background/auth-background.jpg' %}");
         background-size: cover;
@@ -19,9 +23,15 @@ Login
 </style>
 
 <section class="rounded mx-auto mt-10 text-gray-400 bg-slate-900 body-font w-2/5">
+    <div class="w-1/2 mx-auto">
+        <a href="/">
+            <img src="{% static 'images/nav-logo.png' %}" alt="">
+        </a>
+    </div>
+
     <form method="POST" class="">
         {% csrf_token %}
-        <h2 class="text-6xl text-center my-10 pt-4">Login</h2>
+        <!-- <h2 class="text-6xl text-center my-10 pt-4">Login</h2> -->
         <div class="flex flex-col gap-3 px-14 py-3">
             <div class="relative">
                 {{ form.username }}
