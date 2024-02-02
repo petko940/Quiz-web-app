@@ -45,7 +45,7 @@ class BaseQuestionAPIView(APIView):
 # python
 class PythonQuestionsAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        count = 15
+        count = 1
         questions = set(random.sample(list(PythonQuestions.objects.all()), count))
         serializer = PythonQuestionsSerializer(questions, many=True)
         return Response(serializer.data)
@@ -63,7 +63,7 @@ class GetRightPythonAnswerAPIView(BaseQuestionAPIView):
 # Javascript
 class JSQuestionsAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        count = 15
+        count = 1
         questions = set(random.sample(list(JSQuestions.objects.all()), count))
         serializer = JSQuestionsSerializer(questions, many=True)
         return Response(serializer.data)
@@ -103,7 +103,12 @@ class SaveQuizResultAPIView(APIView):
             correct_answers = int(request.data.get('correct_answers', 0))
             finish_time = int(request.data.get('finish_time', 0))
             quiz_name = request.data.get('quiz_name', '')
-            quiz_name = quiz_name.split('-')[0].capitalize()
+            name = {
+                'python-quiz': 'Python',
+                'js-quiz': 'JavaScript',
+                'html-css-quiz': 'HTML/CSS',
+            }
+            quiz_name = name[quiz_name]
 
             result = QuizResult.objects.create(
                 user=user,
