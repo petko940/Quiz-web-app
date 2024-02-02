@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Quiz Python{% endblock %}
+
+{% block navigation %}
+{% endblock %}
+
+{% block content %}
+
+
+<section class="quiz bg-cover bg-center h-screen pt-24" style="
+     backdrop-filter: blur(3px);
+    background-image: url('{% static 'images/background/.jpg' %}');">
+
+    <section class="flex justify-evenly items-center gap-20 mb-1">
+        <div class="current-question hidden mt-5 text-3xl text-gray-100 select-none">
+        </div>
+
+        <div id="timer" class="mt-5 text-3xl text-gray-100 select-none flex justify-center">
+            <span id="timerValue"> <i class="fa-solid fa-clock"></i></span>
+        </div>
+    </section>
+
+    <div
+        class="start mt-5 flex justify-center items-center w-1/6 mx-auto rounded-3xl text-white bg-gradient-to-r from-orange-500 to-blue-500 select-none cursor-pointer">
+        <h1 class="text-3xl font-bold p-5">START</h1>
+    </div>
+
+    <div class="start-quiz hidden">
+
+        <h3 style="text-shadow: 0 0 50px lightblue;"
+            class="text-4xl bg-sky-700 rounded-lg text-center text-white w-3/5 mx-auto select-none py-9"
+            data-id="{{ questions.0.id }}">
+            Question:
+        </h3>
+
+
+        <section class="w-2/4 mx-auto flex flex-wrap gap-3 justify-center items-center mt-7">
+
+            <div
+                class="option min-h-16 cursor-pointer text-xl flex-1 text-center bg-sky-600 text-white h-10 flex items-center justify-center rounded-md select-none">
+            </div>
+            <div
+                class="option min-h-16 cursor-pointer text-xl flex-1 text-center bg-sky-600 text-white h-10 flex items-center justify-center rounded-md select-none">
+            </div>
+
+            <div class="w-full"></div>
+
+            <div
+                class="option min-h-16 cursor-pointer text-xl flex-1 text-center bg-sky-600 text-white h-10 flex items-center justify-center rounded-md select-none">
+            </div>
+            <div
+                class="option min-h-16 cursor-pointer text-xl flex-1 text-center bg-sky-600 text-white h-10 flex items-center justify-center rounded-md select-none">
+            </div>
+
+        </section>
+
+        <section class="flex justify-center items-center">
+            <button class="hidden select-none font-bold px-4 rounded-md p-3 mt-5 bg-white text-black">
+                Next
+            </button>
+        </section>
+    </div>
+
+</section>
+
+
+<script src="{% static 'js/fullQuiz.js' %}"></script>
+
+{% endblock %}
