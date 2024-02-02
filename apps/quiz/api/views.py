@@ -61,7 +61,7 @@ class GetRightPythonAnswerAPIView(BaseQuestionAPIView):
 # Javascript
 class JSQuestionsAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        count = 1
+        count = 15
         questions = set(random.sample(list(JSQuestions.objects.all()), count))
         serializer = JSQuestionsSerializer(questions, many=True)
         return Response(serializer.data)
@@ -76,7 +76,6 @@ class GetRightJSAnswerAPIView(BaseQuestionAPIView):
         return Response(serializer.data, status=200)
 
 
-# TODO: ???
 class SaveQuizResultAPIView(APIView):
     def post(self, request, *args, **kwargs):
         try:

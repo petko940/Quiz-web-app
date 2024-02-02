@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const response = await fetch(`/api/${currentType}-questions/${id}`, { headers });
                     const data = await response.json();
 
-                    option.style.backgroundColor = 'orange';
+                    option.style.backgroundColor = 'darkorange';
 
                     Array.from(document.getElementsByClassName('option')).forEach((option) => {
                         option.style.cursor = 'default';
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     } else {
                         isLastQuestion = true;
-                        option.style.backgroundColor = 'orange';
+                        option.style.backgroundColor = 'darkorange';
 
                         setTimeout(() => {
                             if (data['correct_option'] === option.textContent.trim().substring(3)) {
