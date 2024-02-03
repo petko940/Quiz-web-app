@@ -85,7 +85,7 @@ class LeaderboardView(views.TemplateView):
         context['python_leaderboard'] = python_leaderboard
 
         # JavaScript
-        sorted_by_correct_answers_js = (self.queryset.filter(quiz_name='Js', correct_answers__gt=0)
+        sorted_by_correct_answers_js = (self.queryset.filter(quiz_name='JavaScript', correct_answers__gt=0)
                                         .order_by('-correct_answers', 'finish_time'))
 
         page_js = self.request.GET.get('page_js', 1)
@@ -100,7 +100,21 @@ class LeaderboardView(views.TemplateView):
 
         context['javascript_leaderboard'] = js_leaderboard
 
-        # TODO HTML/CSS
+        sorted_by_correct_answers_html_css = (self.queryset.filter(quiz_name='HTML/CSS', correct_answers__gt=0)
+                                              .order_by('-correct_answers', 'finish_time'))
+
+        page_html_css = self.request.GET.get('page_html_css', 1)
+        paginator_html_css = Paginator(sorted_by_correct_answers_html_css, self.paginate_by)
+
+        try:
+            html_css_leaderboard = paginator_html_css.page(page_html_css)
+        except PageNotAnInteger:
+            html_css_leaderboard = paginator_html_css.page(1)
+        except EmptyPage:
+            html_css_leaderboard = paginator_html_css.page(paginator_html_css.num_pages)
+
+        context['html_css_leaderboard'] = html_css_leaderboard
+
         return context
 
 
