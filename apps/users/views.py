@@ -86,8 +86,11 @@ class ProfileView(LoginRequiredMixin, RedirectToCurrentUserMixin, views.DetailVi
         context['best_results_python'] = (QuizResult.objects.filter(user=self.get_object(), quiz_name='Python').
                                           order_by('quiz_name', '-correct_answers', 'finish_time')[:7])
 
-        context['best_results_js'] = (QuizResult.objects.filter(user=self.get_object(), quiz_name='Js').
+        context['best_results_js'] = (QuizResult.objects.filter(user=self.get_object(), quiz_name='JavaScript').
                                       order_by('quiz_name', '-correct_answers', 'finish_time')[:7])
+
+        context['best_results_html_css'] = (QuizResult.objects.filter(user=self.get_object(), quiz_name='HTML/CSS').
+                                            order_by('quiz_name', '-correct_answers', 'finish_time')[:7])
         return context
 
 

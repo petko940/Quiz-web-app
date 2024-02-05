@@ -31,11 +31,13 @@
     <h3 class="text-2xl text-orange-500 flex justify-center mb-5">No quiz results</h3>
     {% endif %}
 
-    <div class="flex justify-evenly">
+    <div class="flex justify-evenly flex-wrap w-11/12">
         {% if best_results_python %}
         <section class="flex flex-col p-5">
             <h1 class="text-3xl text-white flex justify-center underline underline-offset-4 mb-5">
-                <span class="px-1"><i class="fa-brands fa-python"></i></span>Python
+                <span class="px-1"><i class="fa-brands fa-python"></i></span>
+                Python
+                <span class="px-1"><i class="fa-brands fa-python"></i></span>
             </h1>
             {% for x in best_results_python %}
             <h3 class="text-2xl text-white flex justify-left">{{ x.correct_answers }}/15 done for
@@ -47,9 +49,25 @@
         {% if best_results_js %}
         <section class="flex flex-col p-5">
             <h1 class="text-3xl text-white flex justify-center underline underline-offset-4 mb-5">
-                <span class="px-1"><i class="fa-brands fa-js"></i></span>JavaScript
+                <span class="px-1"><i class="fa-brands fa-js"></i></span>
+                JavaScript
+                <span class="px-1"><i class="fa-brands fa-js"></i></span>
             </h1>
             {% for x in best_results_js %}
+            <h3 class="text-2xl text-white flex justify-left">{{ x.correct_answers }}/15 done for
+                {{ x.finish_time }} secs</h3>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        {% if best_results_html_css %}
+        <section class="flex flex-col p-5">
+            <h1 class="text-3xl text-white flex justify-center underline underline-offset-4 mb-5">
+                <span class="px-1"><i class="fa-brands fa-html5"></i></span>
+                HTML/CSS
+                <span class="px-1"><i class="fa-brands fa-css3-alt"></i></i></span>
+            </h1>
+            {% for x in best_results_html_css %}
             <h3 class="text-2xl text-white flex justify-left">{{ x.correct_answers }}/15 done for
                 {{ x.finish_time }} secs</h3>
             {% endfor %}
