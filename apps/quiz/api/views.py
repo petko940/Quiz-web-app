@@ -52,16 +52,16 @@ class OneQuestionAPIView(APIView):
 
 class BaseQuestionAPIView(APIView):
     permission_classes = [JsTokenPermission]
-    model = None  # To be defined in subclasses
+    model = None
 
     def get_object(self, pk):
         return get_object_or_404(self.model, pk=pk)
 
 
 # python
-class PythonQuestionsAPIView(APIView):
+class PythonQuestionsAPIView(BaseQuestionAPIView):
     def get(self, request, *args, **kwargs):
-        count = 1
+        count = 15
         questions = set(random.sample(list(PythonQuestions.objects.all()), count))
         serializer = PythonQuestionsSerializer(questions, many=True)
         return Response(serializer.data)
@@ -77,9 +77,9 @@ class GetRightPythonAnswerAPIView(BaseQuestionAPIView):
 
 
 # Javascript
-class JSQuestionsAPIView(APIView):
+class JSQuestionsAPIView(BaseQuestionAPIView):
     def get(self, request, *args, **kwargs):
-        count = 1
+        count = 15
         questions = set(random.sample(list(JSQuestions.objects.all()), count))
         serializer = JSQuestionsSerializer(questions, many=True)
         return Response(serializer.data)
@@ -95,9 +95,9 @@ class GetRightJSAnswerAPIView(BaseQuestionAPIView):
 
 
 # HTML CSS
-class HTMLCSSQuestionsAPIView(APIView):
+class HTMLCSSQuestionsAPIView(BaseQuestionAPIView):
     def get(self, request, *args, **kwargs):
-        count = 1
+        count = 15
         questions = set(random.sample(list(HTMLCSSQuestions.objects.all()), count))
         serializer = HTMLCSSQuestionsSerializer(questions, many=True)
         return Response(serializer.data)
@@ -113,6 +113,8 @@ class GetRightHTMLCSSAnswerAPIView(BaseQuestionAPIView):
 
 
 class SaveQuizResultAPIView(APIView):
+    permission_classes = [JsTokenPermission]
+
     def post(self, request, *args, **kwargs):
         try:
             user = request.user
