@@ -92,6 +92,28 @@ document.addEventListener('DOMContentLoaded', function () {
             return array;
         }
 
+        async function saveResult () {
+            try {
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken(),
+                        'X-JSToken': 'simple_token'
+                    },
+                    body: JSON.stringify({
+                        'finish_time': timerElement.textContent.split(' seconds')[0],
+                        'correct_answers': correctAnswers,
+                        'quiz_name': currentURL
+                    })
+                };
+
+                await fetch('/api/save-quiz-result/', options);
+
+            } catch (error) {
+                console.log('Error' + error);
+            }
+        }
 
         // Event listener for options
         Array.from(document.getElementsByClassName('option')).forEach((option) => {
@@ -185,16 +207,17 @@ document.addEventListener('DOMContentLoaded', function () {
                                 button.addEventListener('click', () => {
                                     button.style.display = 'none';
                                     optionSelected = false;
-                                    loadQuestion();
                                 })
                             })
                         }, 1000);
+                        
+                        // save result to the database
+                        saveResult(); 
 
                         const button = document.querySelector('button');
                         button.textContent = 'See Result';
                         clearInterval(timerInterval);
-                        // console.log(timerElement.textContent.split(' seconds')[0]);
-                        // console.log(correctAnswers);
+                        const timeDone = timerInterval;
 
                         button.style.display = 'block';
                         button.addEventListener('click', async () => {
@@ -202,38 +225,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             document.getElementsByClassName('quiz')[0].innerHTML = '';
 
                             try {
-                                const options = {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRFToken': getCSRFToken(),
-                                        'X-JSToken': 'simple_token'
-                                    },
-                                    body: JSON.stringify({
-                                        'finish_time': timerElement.textContent.split(' seconds')[0],
-                                        'correct_answers': correctAnswers,
-                                        'quiz_name': currentURL
-                                    })
-                                };
-
-                                await fetch('/api/save-quiz-result/', options);
-
-                            } catch (error) {
-                                console.log('Error' + error);
-                            }
-
-                            try {
 
                                 const response = await fetch('/api/get-username');
                                 const data = await response.json();
 
-                                //  works
                                 const h4 = document.createElement('h4');
                                 h4.textContent = 'Congratulations ' + data['username'] + '!';
                                 h4.setAttribute('class', 'text-4xl text-center pt-10 text-white');
 
                                 const p = document.createElement('p');
-                                p.textContent = `Your result is: ${correctAnswers} correct answers! Done for ${timerElement.textContent} seconds.`;
+                                p.textContent = `Your result is: ${correctAnswers} correct answers! Done for ${timeDone} seconds.`;
                                 p.setAttribute('class', 'text-3xl text-center pt-10 text-white');
 
                                 const tryAgainAHref = document.createElement('a');
