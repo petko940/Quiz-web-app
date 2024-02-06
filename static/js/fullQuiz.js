@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const button = document.querySelector('button');
                         button.textContent = 'See Result';
                         clearInterval(timerInterval);
-                        const timeDone = timerInterval;
+                        const timeDone = document.getElementById('timerValue').textContent;
 
                         button.style.display = 'block';
                         button.addEventListener('click', async () => {
