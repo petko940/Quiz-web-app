@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
-from django.core.validators import MinLengthValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator, validate_email
 
 from apps.users.validators import validate_username, validate_unique_email
 
@@ -21,8 +22,7 @@ class RegistrationForm(UserCreationForm):
                 'name': 'logemail',
             }
         ),
-        # TODO: add validators
-        # validators=[validate_username],
+        validators=[validate_username],
     )
 
     email = forms.EmailField(
@@ -51,10 +51,10 @@ class RegistrationForm(UserCreationForm):
                 'name': 'logpass',
             }
         ),
-        # validators=[MinLengthValidator(
-        #     6,
-        #     "Password must be greater than 6 characters")
-        # ],
+        validators=[MinLengthValidator(
+            6,
+            "Password must be greater than 6 characters")
+        ],
     )
 
     password2 = forms.CharField(
@@ -73,13 +73,15 @@ class RegistrationForm(UserCreationForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
+        email = email.lower()
         username = self.cleaned_data.get('username')
-        # validate_unique_email(email, username)
+        validate_unique_email(email, username)
 
         return email
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
+        username = username.lower()
         user_model = get_user_model()
 
         if user_model.objects.filter(username=username).exists():
@@ -126,7 +128,7 @@ class LoginForm(AuthenticationForm):
     }
 
     def clean(self):
-        username = self.cleaned_data.get('username')
+        username = self.cleaned_data.get('username').lower()
         password = self.cleaned_data.get('password')
 
         if username and password:
@@ -158,11 +160,13 @@ class ChangeUsernameForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
+        username = username.lower()
         user_model = get_user_model()
 
         if user_model.objects.filter(username=username).exists():
             raise forms.ValidationError('This username is already taken. Please choose another.')
 
+        validate_username(username)
         return username
 
 
@@ -180,6 +184,13 @@ class ChangeEmailForm(forms.ModelForm):
             )
         }
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        email = email.lower()
+        validate_unique_email(email, None)
+
+        return email
+
 
 class ChangePasswordForm(PasswordChangeForm):
     def __init__(self, user, *args, **kwargs):
@@ -190,6 +201,13 @@ class ChangePasswordForm(PasswordChangeForm):
         self.fields['new_password1'].widget.attrs['class'] = 'text-center p-1 w-full'
         self.fields['new_password2'].widget.attrs['placeholder'] = 'Confirm New Password'
         self.fields['new_password2'].widget.attrs['class'] = 'text-center p-1 w-full'
+
+    def clean_new_password1(self):
+        new_password1 = self.cleaned_data.get('new_password1')
+        if len(new_password1) < 6:
+            raise ValidationError("New password must be greater than 6 characters.")
+
+        return new_password1
 
     class Meta:
         model = UserModel

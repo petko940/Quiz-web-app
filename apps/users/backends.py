@@ -10,7 +10,7 @@ class CustomAuthenticationBackend(ModelBackend):
             user = UserModel.objects.get(username=username)
         except UserModel.DoesNotExist:
             try:
-                user = UserModel.objects.get(email=username)
+                user = UserModel.objects.get(email=username.lower())
             except UserModel.DoesNotExist:
                 return None
 
