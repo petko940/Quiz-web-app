@@ -30,7 +30,7 @@ Register
 
     <form method="POST" class="">
         {% csrf_token %}
-        <!-- <h2 class="text-6xl text-center my-10 pt-4">Register</h2> -->
+
         <div class="flex flex-col gap-3 px-14 py-3">
             <div class="relative">
                 {{ form.username }}
@@ -81,11 +81,6 @@ Register
             class="bg-red-700 hover:bg-red-900 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center">
             <i class="fa-brands fa-google pr-5"></i>
             Login with Google
-        </a>
-        <a href="{% url 'social:begin' 'facebook' %}"
-            class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center">
-            <i class="fa-brands fa-facebook pr-5"></i>
-            Login with Facebook
         </a>
     </div>
 
