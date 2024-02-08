@@ -25,7 +25,7 @@
 <div class="bg-slate-800">
     <nav class="flex justify-between items-center mx-8 text-2xl">
         <ul>
-            <a href="/"><img class="w-52 max-lg:w-36 max-md:w-20 h-auto" src="{% static 'images/nav-logo.png' %}" alt=""></a>
+            <a href="/"><img class="w-52 max-lg:w-36 h-auto" src="{% static 'images/nav-logo.png' %}" alt=""></a>
         </ul>
 
         <ul class="hidden lg:flex gap-5">
@@ -127,14 +127,16 @@
         </ul>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const hamburgerBtn = document.getElementById('hamburger-btn');
-            const mobileMenu = document.getElementById('mobileMenu');
-
-            hamburgerBtn.addEventListener('click', function () {
-                mobileMenu.classList.toggle('hidden');
-            });
-        });
-    </script>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        hamburgerBtn.addEventListener('click', function () {
+            mobileMenu.classList.toggle('hidden');
+        });
+    });
+</script>
