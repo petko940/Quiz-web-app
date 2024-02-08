@@ -1398,6 +1398,10 @@ video {
     width: 80%;
   }
 
+  .max-lg\:w-11 {
+    width: 2.75rem;
+  }
+
   .max-lg\:text-stone-100 {
     --tw-text-opacity: 1;
     color: rgb(245 245 244 / var(--tw-text-opacity));
@@ -1415,6 +1419,10 @@ video {
 
   .max-md\:w-full {
     width: 100%;
+  }
+
+  .max-md\:w-11\/12 {
+    width: 91.666667%;
   }
 
   .max-md\:flex-col {
